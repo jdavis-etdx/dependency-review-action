@@ -303,6 +303,32 @@ jobs:
           deny-groups: 'pkg:maven/com.bazaarvoice.jolt/'
 ```
 
+## Allow dependencies from their name or groups
+
+With the `allow-dependencies-licenses` option, you can allow dependencies based on their PURL (Package URL). If a specific version is provided, the action will allow packages matching that version. When no version is specified, the action treats it as a wildcard, allowing all matching packages regardless of version. Multiple values can be added, separated by commas.
+
+In this example, we are excluding all versions of `pkg:npm/wrap-ansi` and only version `6.0.1` of `pkg:npm/strip-ansi@6.0.10`
+
+```yaml
+name: 'Dependency Review'
+on: [pull_request]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  dependency-review:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Checkout Repository'
+        uses: actions/checkout@v4
+      - name: 'Dependency Review'
+        uses: actions/dependency-review-action@v4
+        with:
+          allow-dependencies-licenses: 'pkg:npm/strip-ansi@6.0.1, pkg:npm/wrap-ansi'
+```
+
 ## Waiting for dependency submission jobs to complete
 
 When possible, this action will [include dependencies submitted through the dependency submission API][DSAPI]. In this case,
